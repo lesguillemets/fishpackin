@@ -1,5 +1,11 @@
 {-# LANGUAGE RecordWildCards #-}
-module Fish where
+module Fish ( Fish (..)
+            , Loc
+            , FishKind
+            , Tolerance
+            , FishData
+            , move
+            ) where
 import Data.Complex
 import qualified Data.Map.Strict as M
 
