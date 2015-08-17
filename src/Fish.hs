@@ -28,7 +28,9 @@ move :: FishData -> [Fish] -> [Fish]
 move dat fs = map moveOne fs where
     -- TODO : consider better implementation
     force :: Fish -> Fish -> Loc
-    force f0 f1 = _loc f0 - _loc f1
+    force f0 f1 = let
+        v = _loc f0 - _loc f1 in
+            ((tolerance dat f0 f1 :+ 0) - abs v) * signum v
     moveOne :: Fish -> Fish
     moveOne f@(Fish {..}) = let
         neighbours = filter (/= f) . filter (tooClose dat f) $ fs
