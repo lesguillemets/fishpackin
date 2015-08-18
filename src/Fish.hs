@@ -31,17 +31,17 @@ tolerance d f0 f1 = d M.! (_kind f0, _kind f1)
 tooClose :: FishData -> Fish -> Fish -> Bool
 tooClose d f0 f1 = distSquare f0 f1 < tolerance d f0 f1
 
-move :: FishData -> [Fish] -> [Fish]
+move :: FishData -> [Fish] -> [(Fish, Bool)]
 move dat fs = map moveOne fs where
     -- TODO : consider better implementation
     force :: Fish -> Fish -> Loc
     force f0 f1 = let
         v = _loc f0 - _loc f1 in
             (dt:+0) * ((tolerance dat f0 f1 :+ 0) - abs v) * signum v
-    moveOne :: Fish -> Fish
+    moveOne :: Fish -> (Fish, Bool)
     moveOne f@(Fish {..}) = let
         neighbours = filter (/= f) . filter (tooClose dat f) $ fs
         mean = (/ ((fromIntegral . length) neighbours :+ 0))
         totalForce = mean . sum . map (force f) $ neighbours
         in
-            f {_loc = _loc + totalForce}
+            (f {_loc = _loc + totalForce}, toEnum . signum $ length neighbours)
